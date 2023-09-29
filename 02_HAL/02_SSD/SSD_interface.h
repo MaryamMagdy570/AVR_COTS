@@ -18,7 +18,7 @@ typedef struct{
 	SSD_t SSD1={SSD_u8ANODE,DIO_u8PORTA,DIO_u8PORTC,DIO_u8PIN0}
 	SSD_t* Ptr1 = &SSD1;
 	SSD_u8Enable(Ptr1);
-	SSD_u8SetNum(5,Ptr1);
+	SSD_u8SetNum(5,Ptr1);  or SSD_u8SetNum(5,&SSD1);
 	..
 	..
 	..
