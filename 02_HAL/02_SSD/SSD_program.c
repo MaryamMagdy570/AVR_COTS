@@ -9,6 +9,7 @@
 #include "DIO_interface.h"
 
 
+u8 SSD_u8number[10]={ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE};
 
 
 u8 SSD_u8SetNum(u8 Copy_u8Num, SSD_t* Copy_SSDInfo)
