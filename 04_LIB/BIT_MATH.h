@@ -24,7 +24,7 @@
 						result;                           	\
 					})
 
-
+#define DELAY(X) do{ for (u32 i = 0; i <= X; i++)	asm("NOP");}while(0);
 
 
 #endif 
