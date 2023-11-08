@@ -15,7 +15,7 @@ u8 SSD_u8number[10]={ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE}
 u8 SSD_u8SetNum(u8 Copy_u8Num, SSD_t* Copy_SSDInfo)
 {
 	u8 Local_u8ErrorState = 0;
-	//DIO_u8SetPortDirection(Copy_SSDInfo->Port,DIO_u8PORT_OUTPUT);
+	DIO_u8SetPortDirection(Copy_SSDInfo->Port,DIO_u8PORT_OUTPUT);
 	if(Copy_SSDInfo->Com_Type == SSD_u8ANODE)
 	{
 		DIO_u8SetPortValue(Copy_SSDInfo->Port,~SSD_u8number[Copy_u8Num]);
@@ -34,7 +34,7 @@ u8 SSD_u8SetNum(u8 Copy_u8Num, SSD_t* Copy_SSDInfo)
 u8 SSD_u8Enable(SSD_t* Copy_SSDInfo)
 {
 	u8 Local_u8ErrorState = 0;
-	//DIO_u8SetPinDirection(Copy_SSDInfo->Enable_Port,Copy_SSDInfo->Enable_Pin,DIO_u8PIN_OUTPUT);
+	DIO_u8SetPinDirection(Copy_SSDInfo->Enable_Port,Copy_SSDInfo->Enable_Pin,DIO_u8PIN_OUTPUT);
 	if(Copy_SSDInfo->Com_Type == SSD_u8ANODE)
 	{
 		DIO_u8SetPinValue(Copy_SSDInfo->Enable_Port,Copy_SSDInfo->Enable_Pin,DIO_u8PIN_HIGH);
@@ -53,7 +53,7 @@ u8 SSD_u8Enable(SSD_t* Copy_SSDInfo)
 u8 SSD_u8Disable(SSD_t* Copy_SSDInfo)
 {
 	u8 Local_u8ErrorState = 0;
-	//DIO_u8SetPinDirection(Copy_SSDInfo->Enable_Port,Copy_SSDInfo->Enable_Pin,DIO_u8PIN_OUTPUT);
+	DIO_u8SetPinDirection(Copy_SSDInfo->Enable_Port,Copy_SSDInfo->Enable_Pin,DIO_u8PIN_OUTPUT);
 	if(Copy_SSDInfo->Com_Type == SSD_u8ANODE)
 	{
 		DIO_u8SetPinValue(Copy_SSDInfo->Enable_Port,Copy_SSDInfo->Enable_Pin,DIO_u8PIN_LOW);
@@ -71,10 +71,4 @@ u8 SSD_u8Disable(SSD_t* Copy_SSDInfo)
 
 
 
-void SSDBCD_u8SetNum(u8 Copy_u8Num, SSD_t* Copy_SSDInfo)
-{
-		DIO_u8SetPinValue(Copy_SSDInfo->Port,DIO_u8PIN0,GET_BIT(Copy_u8Num,0));
-		DIO_u8SetPinValue(Copy_SSDInfo->Port,DIO_u8PIN1,GET_BIT(Copy_u8Num,1));
-		DIO_u8SetPinValue(Copy_SSDInfo->Port,DIO_u8PIN2,GET_BIT(Copy_u8Num,2));
-		DIO_u8SetPinValue(Copy_SSDInfo->Port,DIO_u8PIN4,GET_BIT(Copy_u8Num,3));
-}
+

@@ -28,6 +28,9 @@
 #define DIO_u8PORT_LOW 		0
 
 
+/*in preconfig mode */
+void DIO_voidInit();
+
 /* Copy_u8Direction takes the values : DIO_u8PIN_OUTPUT , DIO_u8PIN_INPUT */
 u8 DIO_u8SetPinDirection(u8 Copy_u8Port, u8 Copy_u8Pin, u8 Copy_u8Direction);
 

@@ -12,7 +12,7 @@ all of these addreses like : *((u8*)0X3A) we get it from datasheet section"regis
 #define PINA_REG   	*((volatile u8*)0x39)
 #define PINB_REG   	*((volatile u8*)0x36)
 #define PINC_REG   	*((volatile u8*)0x33)
-#define PIND_REG   	*((volatile u8*)0x31)
+#define PIND_REG   	*((volatile u8*)0x30)
 
 #define PORTA_REG  	*((volatile u8*)0x3B)
 #define PORTB_REG  	*((volatile u8*)0x38)

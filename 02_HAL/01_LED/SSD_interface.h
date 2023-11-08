@@ -27,13 +27,11 @@ typedef struct{
 */
 
 
-u8 SSD_u8SetNum(u8 Copy_u8Num, SSD_t* Copy_SSDInfo);
+u8 SSD_u8SetNum(u8 Copy_u8Num, SSD_t* info);
 
 u8 SSD_u8Enable(SSD_t* info);
 
 u8 SSD_u8Disable(SSD_t* info);
-
-void SSDBCD_u8SetNum(u8 Copy_u8Num, SSD_t* Copy_SSDInfo);
 
 
 
