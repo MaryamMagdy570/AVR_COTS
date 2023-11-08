@@ -1,5 +1,5 @@
-#ifndef _SPI_REGISTER_H_
-#define _SPI_REGISTER_H_
+#ifndef _I2C_REGISTER_H_
+#define _I2C_REGISTER_H_
 
 #define  TWBR     *((volatile u8*)0x20)
 #define  TWCR     *((volatile u8*)0x56)

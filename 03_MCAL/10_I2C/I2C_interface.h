@@ -1,36 +1,38 @@
-#ifndef _SPI_INTERFACE_H_
-#define _SPI_INTERFACE_H_
+#ifndef _I2C_INTERFACE_H_
+#define _I2C_INTERFACE_H_
 
 
+typedef enum
+{
+NoError,
+StartConditionErr,
+RepeatedStartErr,
+SlaveAddressWithWriteErr,
+SlaveAddressWithReadErr,
+MasterWriteByteErr,
+MasterReadByteErr,
+}I2C_ErrStatus;
 
-#define TW_MT_ARB_LOST   0x38
-#define TW_MR_ARB_LOST   0x38
-#define TW_START         0x08
-#define TW_REP_START     0x10
-#define TW_MT_SLA_ACK    0x18
-#define TW_MT_DATA_ACK   0x28
-#define TW_MR_DATA_NOT_ACK  0x58
-#define TW_MR_SLA_NOT_ACK   0x48
-#define TW_MT_SLA_NOT_ACK   0x20
-#define TW_MT_DATA_NOT_ACK  0x30
-#define TW_MR_DATA_ACK   0x50
-#define TW_MR_SLA_ACK    0x40
+//pass 0 if master has not address
+void I2C_voidMaterInit(u8 address);
 
+void I2C_voidSlaveInit(u8 address);
 
-void I2C_voidInit(void);
+I2C_ErrStatus I2C_voidSendStartCondition(void);
 
-void I2C_voidStart(void);
-
-void I2C_voidStop(void);
-
-void I2C_voidWrite(u8 data);
-
-u8 I2C_u8ReadACK(void);
-
-u8 I2C_u8ReadNACK(void);
-
-u8 I2C_u8GetStatus(void);
+I2C_ErrStatus I2C_voidSendRepeatedStart(void);
 
 
+I2C_ErrStatus I2C_voidSendSlaveAddressWrite(u8 address);
+
+I2C_ErrStatus I2C_voidSendSlaveAddressRead(u8 address);
+
+
+I2C_ErrStatus I2C_voidMasterWriteDataByte(u8 data);
+
+I2C_ErrStatus I2C_voidMasterReadDataByteWithAck(u8* data);
+I2C_ErrStatus I2C_voidMasterReadDataByteWithNAck(u8* data);
+
+void I2C_voidSendStopCondition(void);
 
 #endif

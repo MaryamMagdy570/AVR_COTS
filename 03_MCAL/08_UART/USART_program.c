@@ -32,8 +32,8 @@ void USART_voidInit()
 	SET_BIT(UCSRC,UCSZ0);
 
 	//BAUD RATE
-	UBRRL = 207;
-		//UBRRL = 103;
+	//UBRRL = 207;  //16M
+		UBRRL = 103;  //8M
 	//UBRRH = 0;
 
 
