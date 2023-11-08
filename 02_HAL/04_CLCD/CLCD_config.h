@@ -7,7 +7,7 @@
 
 #define CLCD_D4				DIO_u8PIN0
 #define CLCD_D5				DIO_u8PIN1
-#define CLCD_D6				DIO_u8PIN2
+#define CLCD_D6				DIO_u8PIN3
 #define CLCD_D7				DIO_u8PIN4
 
 #define CLCD_CTRL_PORT		DIO_u8PORTA

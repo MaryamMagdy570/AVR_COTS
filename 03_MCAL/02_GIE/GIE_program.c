@@ -8,7 +8,7 @@
 
 
 
-void GIE_voidEable(void)
+void GIE_voidEnable(void)
 {
   SET_BIT (SREG,7);
 }

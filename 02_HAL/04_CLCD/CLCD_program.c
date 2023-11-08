@@ -140,14 +140,69 @@ void CLCD_voidSendString(const char* Copy_PtrString)
 }
 
 
-/*
+
 void CLCD_voidSendInteger(u16 Copy_Number)
 {
+	if (!Copy_Number)
+		CLCD_voidSendData('0');
 	//reversing number
-	u16 Local_u8Number = Copy_Number;
-	u16 Local_u8ReversedNum =
+	u16 Local_u16Number = Copy_Number;
+	u8 Local_u8Array[5];
+	u8 Local_i1, Local_i2;
+	for (Local_i1=0; Local_u16Number!=0; Local_i1++)
+	{
+		Local_u8Array[Local_i1] = Local_u16Number % 10;
+		Local_u16Number /=10;
+	}
+	for (Local_i2 = Local_i1; Local_i2!=0; Local_i2--)
+	{
+		CLCD_voidSendData(Local_u8Array[Local_i2-1]+'0');
+	}
+
 }
-*/
+
+void CLCD_voidSendDecimalNumber(f32 Copy_Number)
+{
+	if (!Copy_Number)
+		CLCD_voidSendData('0');
+	//reversing number
+	f32 Local_f32Number = Copy_Number;
+	u8 Local_u8Array[10];
+	u8 Local_i1, Local_i2;
+	u8 Local_NumOfTens=0;
+
+	while (Local_f32Number-(u32)Local_f32Number)
+	{
+		Local_f32Number*=10;
+		Local_NumOfTens++;
+	}
+
+	//casting
+	u32 Local_u32Number = Local_f32Number;
+
+	for (Local_i1=0; Local_u32Number!=0; Local_i1++)
+	{
+		Local_u8Array[Local_i1] = Local_u32Number % 10;
+		Local_u32Number /=10;
+	}
+
+	if (Local_i1 == Local_NumOfTens)
+		CLCD_voidSendData('0');
+
+	for (Local_i2 = Local_i1; Local_i2!=0; Local_i2--)
+	{
+		if (Local_i2 == Local_NumOfTens)
+			CLCD_voidSendData('.');
+		CLCD_voidSendData(Local_u8Array[Local_i2-1]+'0');
+	}
+
+	if (Local_NumOfTens == 0)
+	{
+		CLCD_voidSendData('.');
+		CLCD_voidSendData('0');
+	}
+}
+
 
 void CLCD_voidGoToRowColumn(u8 Copy_u8xPosition, u8 Copy_u8yPosition)
 {

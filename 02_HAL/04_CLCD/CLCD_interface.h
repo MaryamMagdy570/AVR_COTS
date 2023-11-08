@@ -23,7 +23,9 @@ void CLCD_voidSendData(u8 Copy_u8Data);
 
 void CLCD_voidSendString(const char* Copy_PtrString);
 
-void CLCD_voidSendNumber(u16 Copy_Number);
+void CLCD_voidSendInteger(u16 Copy_Number);
+
+void CLCD_voidSendDecimalNumber(f32 Copy_Number);
 
 /*rows 0:3 , columns 0:19*/
 void CLCD_voidGoToRowColumn(u8 Copy_u8xPosition, u8 Copy_u8yPosition);

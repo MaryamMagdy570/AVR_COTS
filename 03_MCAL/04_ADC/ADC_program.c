@@ -1,15 +1,22 @@
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
 
+
 #include "ADC_register.h"
 #include "ADC_interface.h"
 #include "ADC_config.h"
 #include "ADC_private.h"
 
 
+/*
+#define BAUD_RATE_ASYNC_NORMAL(baud_rate) ((F_CPU / (16UL * (baud_rate))) - 1)
+#define BAUD_RATE_ASYNC_DOUBLE(baud_rate) ((F_CPU / (8UL * (baud_rate))) - 1)
+#define BAUD_RATE_SYNC_MASTER(baud_rate)  ((F_CPU / (2UL * (baud_rate))) - 1)
+*/
 void ADC_voidInit(void)
 {
-	ADC_voidEnable();
+
+	//ADC_voidEnable();
 
   #if VOLTAGE_REFERENCE == AVREF
     CLR_BIT(ADMUX,REFS1);
@@ -28,73 +35,25 @@ void ADC_voidInit(void)
     CLR_BIT(ADMUX,ADLAR);
   #endif
 
-  #if ADC_CHANNEL_NUMBER == 0
-    CLR_BIT(ADMUX,MUX0);
-    CLR_BIT(ADMUX,MUX1);
-    CLR_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 1
-    SET_BIT(ADMUX,MUX0);
-    CLR_BIT(ADMUX,MUX1);
-    CLR_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 2
-    CLR_BIT(ADMUX,MUX0);
-    SET_BIT(ADMUX,MUX1);
-    CLR_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 3
-    SET_BIT(ADMUX,MUX0);
-    SET_BIT(ADMUX,MUX1);
-    CLR_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 4
-    CLR_BIT(ADMUX,MUX0);
-    CLR_BIT(ADMUX,MUX1);
-    SET_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 5
-    SET_BIT(ADMUX,MUX0);
-    CLR_BIT(ADMUX,MUX1);
-    SET_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 6
-    CLR_BIT(ADMUX,MUX0);
-    SET_BIT(ADMUX,MUX1);
-    SET_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #elif ADC_CHANNEL_NUMBER == 7
-    SET_BIT(ADMUX,MUX0);
-    SET_BIT(ADMUX,MUX1);
-    SET_BIT(ADMUX,MUX2);
-    CLR_BIT(ADMUX,MUX3);
-    CLR_BIT(ADMUX,MUX4);
-  #endif
 
   #if ADC_PRESCALLER == DIVID_BY_128
     SET_BIT(ADCSRA,ADPS2);
     SET_BIT(ADCSRA,ADPS1);
     SET_BIT(ADCSRA,ADPS0);
+
   #endif
 
   #if ADC_MODE == SINGLE_CONVERSION
     CLR_BIT(ADCSRA,ADATE);
   #elif ADC_MODE == AUTOTRIGGERED
     SET_BIT(ADCSRA,ADATE);
-  #if ADC_AUTO_TRIGGER_SOURCE == FREE_RUNNING_MODE
-    ADC_voidStartConversion();
-    CLR_BIT(SFIOR,ADTS0);
-    CLR_BIT(SFIOR,ADTS1);
-    CLR_BIT(SFIOR,ADTS2);
+	#if ADC_AUTO_TRIGGER_SOURCE == FREE_RUNNING_MODE
+		CLR_BIT(SFIOR,ADTS0);
+		CLR_BIT(SFIOR,ADTS1);
+		CLR_BIT(SFIOR,ADTS2);
+    #endif
   #endif
-  #endif
+
 } 
 
 
@@ -108,53 +67,75 @@ void ADC_voidDisable()
   CLR_BIT(ADCSRA,ADEN);
 }
 
-u16 ADC_u16ReadADC()
+void ADC_voidStartConversionSync(u8 Copy_u8Channel)
 {
-	u16 Local_u16Digital;
+	//clearing channel
+	ADMUX&=0b11100000;
 
-	#if ADC_MODE == SINGLE_CONVERSION
-	ADC_voidStartConversion();
-	while(GET_BIT(ADCSRA,ADSC))
+	//setting the channel selected
+	ADMUX|=Copy_u8Channel;
+
+	//start conversion
+	SET_BIT(ADCSRA,ADSC);
+
+	while(!GET_BIT(ADCSRA,ADIF))
 	{
 		//POLLING : BUSY WAITING UNTIL EVENT
+		//fix me: need time out
 	}
-	#endif
 
-	Local_u16Digital = ((u16)ADCH<<2);
-
-	return Local_u16Digital;
+	//CLEAR THE FLAG
+	SET_BIT(ADCSRA,ADIF);
 }
 
-void ADC_voidStartConversion()
+
+void ADC_voidStartConversionAsync(u8 Copy_u8Channel)
 {
-  SET_BIT(ADCSRA,ADSC);
+	ADMUX&=0b11100000;
+	ADMUX|=Copy_u8Channel;
+	SET_BIT(ADCSRA,ADSC);
+
+}
+
+u16 ADC_u16ReadADC()
+{
+	u16 Local_u16ADCRead;
+	Local_u16ADCRead= ADC;
+
+	return Local_u16ADCRead;
+
 }
 
 u16 ADC_u16ReadADCInMV()
 {
-	u16 Local_u16Analog,Local_u16Digital;
-	Local_u16Digital = ADC_u16ReadADC();
-	Local_u16Analog = Local_u16Digital * 5000ul / 1024;
+	u16 Local_u16Analog;
+	Local_u16Analog = (ADC * ADC_VREF* 1000ul) /1024;/// 256;//POWER(2,ADC_RESOLUTION);
 	return Local_u16Analog;
 }
 
-void ADC_voidEnableInt()
+void ADC_voidInterruptEnable()
 {
 	SET_BIT(ADCSRA,ADIE);
 }
 
-void ADC_voidDisableInt()
+void ADC_voidInterruptDisable()
 {
 	CLR_BIT(ADCSRA,ADIE);
 }
 
 
-void (*ADC_ptr) (void);
+static void (*ADC_ptr) (void) = NULL;
 
 void ADC_SetCallback( void (*ptr) (void) )
 {
-	ADC_ptr = ptr;
+	if(ptr != NULL)
+	{
+		ADC_ptr = ptr;
+	}
+
 }
+
+
 
 void __vector_16(void) __attribute__((signal,used,externally_visible));  //to avoid optimization
 void __vector_16(void)
@@ -165,7 +146,8 @@ void __vector_16(void)
 
 
 
-/*
-u16 MADC_u16ReadData(u8 Copy_u8Channel);
-*/
+
+
+
+
 
