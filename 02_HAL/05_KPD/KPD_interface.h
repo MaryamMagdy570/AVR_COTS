@@ -4,9 +4,7 @@
 
 
 
-
-
-
+u8 KPD_u8GetPressedKey(void);
 
 
 #endif
